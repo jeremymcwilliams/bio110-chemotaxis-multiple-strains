@@ -26,6 +26,44 @@ library(tidyverse)
 For this lab, the collected data for both strains is available in the data.csv file. Below, load the data, and then look at the data frame.
 
 
+```{r}
+
+
+# testing loading multiple strains & anova
+
+osm1<-read_csv("osm1.csv");
+
+osm5<-read_csv("osm5.csv");
+dyf2<-read_csv("dyf2.csv")
+
+osm1
+osm5
+dyf2
+
+combined<-rbind(osm1, osm5, dyf2)
+combined
+
+
+df<-mutate(.data=combined, ChemI=((T1+T2)-(C1+C2))/(T1+T2+C1+C2))
+
+#print out our updated df dataframe
+df
+
+meanChemI<-df %>% group_by(strain) %>% summarise(avg=mean(ChemI), StandardDeviation=sd(ChemI), n=n(), upperCI=avg+((qnorm(0.975)*StandardDeviation)/sqrt(n)), lowerCI=avg-((qnorm(0.975)*StandardDeviation)/sqrt(n)))
+
+meanChemI
+
+res.aov<-aov(ChemI ~ strain, data=df)
+summary(res.aov)
+
+TukeyHSD(res.aov)
+
+
+
+```
+
+
+
 
 ```{r}
 
