@@ -7,94 +7,60 @@ df_print: paged
 pdf_document: default
 ---
 
-## Chemotaxis Assay - Multiple Strains
+******************* Lindy's stuff *******************************
+
+Independent Investigations of C. elegant Chemotaxis	
+
+Congratulations on completing your proposal!  Please proceed to data analysis only after approval of your proposal from your instructor.
+
+We have carried out the chemotaxis assays to 1% isoamyl alcohol for all of the mutants.  The data for each of the strains are loaded as individual .csv files with the tutorial.  Follow the directions to load the files for the strains you are proposing to analyze.  You will then use a command to combine each of these datafiles into one data frame.  Then you will proceed with the code for further calculations as you have done previously.
 
 
-This week we have collected data for chemotaxis behavior of wildtype v daf-19(-) C. elegans to 1% isoamyl alcohol. The goals for this week are to:
-*calculate a chemotaxis index for each plate
-*calculate a mean chemotaxis index for each strain with 95% confidence intervals
-*create a bar graph with this data
-*perform a Welch's t-test to determine if the mean chemotaxis index for these strains are significantly different
-
-Load the tidyverse:
+First, load the tidyverse:
 ```{r}
 library(tidyverse)
 
 ```
 
 
-For this lab, the collected data for both strains is available in the data.csv file. Below, load the data, and then look at the data frame.
-
 
 ```{r}
 
 
-# testing loading multiple strains & anova
+# To load the datasets for each strain you are analyzing, adapt the following code for the appropriate data set.  You will need a line of code for each dataset you need to load.  
 
-osm1<-read_csv("osm1.csv");
-
-osm5<-read_csv("osm5.csv");
-dyf2<-read_csv("dyf2.csv")
-
-osm1
-osm5
-dyf2
-
-combined<-rbind(osm1, osm5, dyf2)
-combined
+#wt<-read_csv(“wt.csv");
 
 
-df<-mutate(.data=combined, ChemI=((T1+T2)-(C1+C2))/(T1+T2+C1+C2))
+#Then print the each dataset to make sure it loaded properly.
+#wt
 
-#print out our updated df dataframe
-df
+#To combine the datasets into one data frame, adapt the following code. Be sure to list all of the datasets you are comparing in the parentheses.
 
-meanChemI<-df %>% group_by(strain) %>% summarise(avg=mean(ChemI), StandardDeviation=sd(ChemI), n=n(), upperCI=avg+((qnorm(0.975)*StandardDeviation)/sqrt(n)), lowerCI=avg-((qnorm(0.975)*StandardDeviation)/sqrt(n)))
+#combined<-rbind(wt, )
 
-meanChemI
-
-res.aov<-aov(ChemI ~ strain, data=df)
-summary(res.aov)
-
-TukeyHSD(res.aov)
-
-
-
+#Then print the combined dataset to make sure that the data for all the strains you are interested in are combined.
+#combined
 ```
 
 
 
-
-```{r}
-
-#allData<-read_csv("data.csv")
-
-#allData
-
-```
-
-
-Like last lab, we want to determine the Chemotaxis Index. 
+Like last couple of labs, we want to determine the Chemotaxis Index. 
 The formula is:
 
 ChemI= ((T1+T2)-(C1+C2))/(T1+T2+C1+C2)
 
-
-
 We can add a column to our data frame by using the "mutate" function. "Mutate" allows you to create a new column of values based upon data already in the data frame. So using our example above:
-
-
 
 ```{r}
 
 
-#df<-mutate(.data=allData, ChemI=((T1+T2)-(C1+C2))/(T1+T2+C1+C2))
+#df<-mutate(.data=combined, ChemI=((T1+T2)-(C1+C2))/(T1+T2+C1+C2))
 
 #print out our updated df dataframe
 #df
 
 ```
-
 
 Now that we have the Chemotaxis Index for each plate, we can use group by/summarise to calculate the average, standard deviation, n, and upper and lower confidence intervals:
 
@@ -107,6 +73,7 @@ Now that we have the Chemotaxis Index for each plate, we can use group by/summar
 
 
 ```
+
 ### Now make a barplot using ggplot
 ```{r}
 #ggplot(data=meanChemI, mapping=aes(x=strain, y=avg))+geom_bar(stat="identity")
@@ -134,7 +101,6 @@ Now that we have the Chemotaxis Index for each plate, we can use group by/summar
 ```
 
 
-
 ### Plot a bar graph with 95% Confidence interval used for error bars and adjust the y-axis limits to extend from -1 to +1.
 
 ```{r}
@@ -146,26 +112,37 @@ Now that we have the Chemotaxis Index for each plate, we can use group by/summar
 
 
 ```
+
 ### Save the plot
 ```{r}
 ggsave("plot.png", height=5, width=8)
 
 
 ```
-###Look at your plot. You have two bars representing the mean chemotaxis index for each strain. How do you know if these are statistically different from each other? 
 
-#from the Handbook for Biological Statistics by John H. MacDonald (http://www.biostathandbook.com/probability.html):
 
-#"The basic idea of a statistical test is to identify a null hypothesis, collect some data, then estimate the probability of getting the observed data if the null hypothesis were true. If the probability of getting a result like the observed one is low under the null hypothesis, you conclude that the null hypothesis is probably not true."
+Now that you have plotted your data, it is time to do some statistical calculations to see if the mean chemotaxis index for each strain is significantly different than the others.  Previously, with only two strains, this was done with a Welch’s t-test.  For comparing multiple strains, we will use a one-way anova (analysis of variance) across all data looking at the means and the variance of the data to determine the p-value for the probability that these data are not significantly different from each other.  A p-value less than 0.05 suggests that the differences are due to real differences between the strains in the assay rather than random chance. It's worth noting that as more comparisons are made, the probability of a "false-positive" increases
 
-#The null hypothesis for comparing two samples is that they are not different. You must run a statistical analysis called a t-test to calculate the probability (p-value) that the null hypothesis is true, i.e., the strains have the same chemotaxis index. A very low p-value indicates that the strains have very low probability of being the same and are instead significantly different. A Welch's t-test is specifically used when sample sizes are small (less than 10) or unequal or if variances are large.
+For a detailed explanation of anova, visit this website. (http://www.biostathandbook.com/onewayanova.html).
 
-#t.test(ChemI ~ strain, data=df) will examine the chemotaxis index, "ChemI", of each plate sorted by "~" the strain in our df dataframe table created earlier in this tutorial to perform a Welch's t-test with your data.
-
-#Generally a p-value less than 0.05 indicates the two means are significantly different and in this case that your mutant strain behaves differently than your wild-type strain.
 ```{r}
-#t.test(ChemI ~ strain, data=df)
+
+#Run the following code to run the anova analysis of your dataset.
+
+#res.aov<-aov(ChemI ~ strain, data=df)
+
+#Then the following line to see the results of the analysis.
+#summary(res.aov)
+
+
+#This gives you a p-value for your entire dataset. If you reject the null hypothesis that all the means are equal (p<0.05), you'll probably want to look at the data in more detail. One common way to do this is to compare different pairs of means and see which are significantly different from each other.  For this we will use the Tukey–Kramer method with which the minimum significant difference is calculated for each pair of means. It depends on the sample size in each group, the average variation within the groups, and the total number of groups. 
+```
+
+Run the following code to calculate a p-value for each pairwise comparison.
+
+```{r}
+#TukeyHSD(res.aov)
 
 ```
-# Be sure to record the results of your t-test in your online lab notebook.
+
 
