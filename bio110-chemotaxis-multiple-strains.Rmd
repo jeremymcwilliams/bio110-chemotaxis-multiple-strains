@@ -7,9 +7,7 @@ df_print: paged
 pdf_document: default
 ---
 
-******************* Lindy's stuff *******************************
-
-Independent Investigations of C. elegant Chemotaxis	
+## Independent Investigations of C. elegant Chemotaxis	
 
 Congratulations on completing your proposal!  Please proceed to data analysis only after approval of your proposal from your instructor.
 
