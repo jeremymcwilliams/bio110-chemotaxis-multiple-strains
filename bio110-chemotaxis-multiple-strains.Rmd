@@ -27,7 +27,7 @@ library(tidyverse)
 
 # To load the datasets for each strain you are analyzing, adapt the following code for the appropriate data set.  You will need a line of code for each dataset you need to load.  
 
-#wt<-read_csv(“wt.csv");
+#wt<-read_csv("wildtype.csv")
 
 
 #Then print the each dataset to make sure it loaded properly.
