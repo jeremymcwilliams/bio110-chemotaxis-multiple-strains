@@ -78,10 +78,10 @@ Now that we have the Chemotaxis Index for each plate, we can use group by/summar
 
 
 ```
-# Take a look at your plot.  Is this the order you want the data presented?  The code has plotted the data in the order it appeared in the meanChemI data table, daf-19 followed by wt.  Generally, the data for the wild-type strain should appear first on the x-axis followed by any mutant strains. To make this change, use the following code to determine the order of the x-axis and then make the plot again.
+# Take a look at your plot.  Is this the order you want the data presented?  The code has plotted the data in the order it appeared in the meanChemI data table.  Generally, the data for the wild-type strain should appear first on the x-axis followed by any mutant strains. To make this change, adapt the following code by filling in the strains you want to compare in the parentheses to determine the order of the x-axis and then make the plot again.
 
 ```{r}
-#meanChemI$strain<-factor(meanChemI$strain, levels=c("wt", "daf-19"))
+#meanChemI$strain<-factor(meanChemI$strain, levels=c("wt", ))
 
 #ggplot(data=meanChemI, mapping=aes(x=strain, y=avg))+geom_bar(stat="identity")
 
@@ -119,7 +119,7 @@ ggsave("plot.png", height=5, width=8)
 ```
 
 
-Now that you have plotted your data, it is time to do some statistical calculations to see if the mean chemotaxis index for each strain is significantly different than the others.  Previously, with only two strains, this was done with a Welch’s t-test.  For comparing multiple strains, we will use a one-way anova (analysis of variance) across all data looking at the means and the variance of the data to determine the p-value for the probability that these data are not significantly different from each other.  A p-value less than 0.05 suggests that the differences are due to real differences between the strains in the assay rather than random chance. It's worth noting that as more comparisons are made, the probability of a "false-positive" increases
+Now that you have plotted your data, it is time to do some statistical calculations to see if the mean chemotaxis index for each strain is significantly different than the others.  Previously, with only two strains, this was done with a Welch’s t-test.  For comparing multiple strains, we will use a one-way anova (analysis of variance) across all data looking at the means and the variance of the data to determine the p-value for the probability that these data are not significantly different from each other.  A p-value less than 0.05 suggests that the differences are due to real differences between the strains in the assay rather than random chance. It's worth noting that as more comparisons are made, the probability of a "false-positive" increases.
 
 For a detailed explanation of anova, visit this website. (http://www.biostathandbook.com/onewayanova.html).
 
@@ -143,4 +143,4 @@ Run the following code to calculate a p-value for each pairwise comparison.
 
 ```
 
-
+Be sure to record this data in your online lab notebook.
